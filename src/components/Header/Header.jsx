@@ -1,14 +1,9 @@
-function Header() {
-  const f = (e) => {
-    e.preventDefault();
-    console.log(e.target.by.value);
-    console.log(e.target.query.value);
-  };
+function Header({ handleSearchSubmit }) {
   return (
     <>
       <header className="w-full">
         <div className="flex w-full justify-center p-2">
-          <form className="flex gap-2" onSubmit={f}>
+          <form className="flex gap-2" onSubmit={handleSearchSubmit}>
             <div>
               <div className="relative md:w-64 lg:w-[25em] ">
                 <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
