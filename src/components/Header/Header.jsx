@@ -1,44 +1,59 @@
 function Header() {
+  const f = (e) => {
+    e.preventDefault();
+    console.log(e.target.by.value);
+    console.log(e.target.query.value);
+  };
   return (
-    <div className="fixed bottom-12 left-0 z-50 w-full h-16 ">
-      <div className="grid h-full max-w-xs grid-cols-2 mx-auto font-medium bg-slate-700 border-slate-600 rounded-full">
-        <button
-          type="button"
-          className="inline-flex flex-col items-center justify-center px-5 border-gray-600 border-x hover:bg-gray-800 group rounded-l-full"
-        >
-          <svg
-            className="w-5 h-5 mb-2 text-gray-400 group-hover:text-blue-500"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
-          </svg>
-          <span className="text-sm text-gray-400 group-hover:text-blue-500">
-            Home
-          </span>
-        </button>
-        <button
-          type="button"
-          className="inline-flex flex-col items-center justify-center px-5 border-e border-gray-600 hover:bg-gray-800 group rounded-r-full"
-        >
-          <svg
-            className=" text-gray-400 group-hover:text-blue-500"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 .288l2.833 8.718h9.167l-7.417 5.389 2.833 8.718-7.416-5.388-7.417 5.388 2.833-8.718-7.416-5.389h9.167z" />
-          </svg>
-          <span className="text-sm text-gray-400 group-hover:text-blue-500">
-            Liked
-          </span>
-        </button>
-      </div>
-    </div>
+    <>
+      <header className="w-full">
+        <div className="flex w-full justify-center p-2">
+          <form className="flex gap-2" onSubmit={f}>
+            <div>
+              <div className="relative md:w-64 lg:w-[25em] ">
+                <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                  <svg
+                    width="24"
+                    height="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                  >
+                    <path d="M22 24h-17c-1.657 0-3-1.343-3-3v-18c0-1.657 1.343-3 3-3h17v24zm-2-4h-14.505c-1.375 0-1.375 2 0 2h14.505v-2zm0-18h-3v9l-2-1.547-2 1.547v-9h-8v16h15v-16z" />
+                  </svg>
+                </div>
+                <input
+                  type="search"
+                  id="query"
+                  name="query"
+                  className="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Search for book"
+                />
+              </div>
+            </div>
+            <div>
+              <select
+                id="by"
+                name="by"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option value="title">Title</option>
+                <option value="author">Author</option>
+                <option value="genre">Genre</option>
+              </select>
+            </div>
+            <div>
+              <button
+                type="submit"
+                className="text-white bg-gray-700 hover:bg-slate-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-gray-700 dark:hover:bg-slate-900 dark:focus:ring-blue-800"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+        </div>
+      </header>
+    </>
   );
 }
 
