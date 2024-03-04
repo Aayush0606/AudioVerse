@@ -1,9 +1,40 @@
-function Header({ handleSearchSubmit }) {
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { handleSearch } from "../../app/reducers/booksSlice";
+
+function Header() {
+  const dispatch = useDispatch();
+  const [placeholderText, setPlaceholderText] = useState(
+    "Search book by title"
+  );
+  const handleCategoryChange = (e) => {
+    const currSelected = e.target.value;
+    if (currSelected === "title") setPlaceholderText("Search by title");
+    if (currSelected === "author")
+      setPlaceholderText("Search by author's lastname");
+    if (currSelected === "genre") setPlaceholderText("Search by title genre");
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const searchQuery = e.target.query.value;
+    const searchBy = e.target.by.value;
+    if (!searchQuery || searchQuery.trim() === "") {
+      alert("Please enter valid input!!");
+      return;
+    }
+    if (!searchBy || searchBy.trim() === "") {
+      alert("Please select valid type!!");
+      return;
+    }
+    e.target.query.value = "";
+    dispatch(handleSearch({ searchQuery, searchBy }));
+  };
   return (
     <>
       <header className="w-full">
         <div className="flex w-full justify-center p-2">
-          <form className="flex gap-2" onSubmit={handleSearchSubmit}>
+          <form className="flex gap-2" onSubmit={handleSubmit}>
             <div>
               <div className="relative md:w-64 lg:w-[25em] ">
                 <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -22,7 +53,7 @@ function Header({ handleSearchSubmit }) {
                   id="query"
                   name="query"
                   className="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Search for book"
+                  placeholder={placeholderText}
                 />
               </div>
             </div>
@@ -30,6 +61,7 @@ function Header({ handleSearchSubmit }) {
               <select
                 id="by"
                 name="by"
+                onChange={handleCategoryChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 <option value="title">Title</option>

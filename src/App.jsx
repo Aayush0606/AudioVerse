@@ -1,66 +1,46 @@
 import { useState, useEffect } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import HomePage from "./pages/HomePage/HomePage";
+import { useSelector, useDispatch } from "react-redux";
+import { handleUpdate } from "./app/reducers/booksSlice";
 function App() {
-  const limit = 20;
-  const fields = `{id,authors,title}`;
-  const [bookList, setBookList] = useState([]);
-  const [offset, setOffset] = useState(0);
-  const [url, setUrl] = useState(`api/feed/audiobooks`);
+  const dispatch = useDispatch();
+  const booksState = useSelector((data) => data.booksState);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     (async () => {
+      setLoading(true);
       await fetch(
-        `${url}?offset=${offset}&limit=${limit}&format=json&fields=${fields}`
+        `${booksState.baseURL}?offset=${
+          booksState.offset * booksState.limit
+        }&limit=${booksState.limit}&format=json&fields=${booksState.fields}`
       )
-        .then((data) => data.json())
-        .then((data) => setBookList(data.books))
-        .catch((err) => console.log("error", err));
+        .then((data) => {
+          if (data.status !== 200) {
+            alert("No such book!!");
+            throw new Error();
+          }
+          return data.json();
+        })
+        .then((data) => dispatch(handleUpdate({ newBookList: data.books })))
+        .catch((err) => console.log("error", err))
+        .finally(() => setLoading(false));
     })();
-  }, [url]);
+  }, [booksState.baseURL]);
 
-  const fetchPaginationData = async () => {
-    await fetch(
-      `${url}?offset=${
-        offset + limit
-      }&limit=${limit}&format=json&fields=${fields}`
-    )
-      .then((data) => data.json())
-      .then((data) => setBookList((prev) => prev.concat(data.books)))
-      .catch((err) => console.log("error", err))
-      .finally(() => setOffset((prev) => prev + limit));
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    const searchQuery = e.target.query.value;
-    const searchBy = e.target.by.value;
-    if (!searchQuery || searchQuery.trim() === "") {
-      alert("Please enter valid input!!");
-      setUrl("api/feed/audiobooks/");
-      return;
-    }
-    if (!searchBy || searchBy.trim() === "") {
-      alert("Please select valid type!!");
-      setUrl("api/feed/audiobooks/");
-      return;
-    }
-    let newUrl = `api/feed/audiobooks/${searchBy}`;
-    if (searchBy === "title") newUrl += `/%5E${searchQuery}`;
-    else newUrl += `/${searchQuery}`;
-    console.log(newUrl);
-    setUrl(newUrl);
-    setOffset(0);
-  };
   return (
     <>
       <div className="bg-black flex flex-col h-screen justify-between overflow-hidden">
-        <Header handleSearchSubmit={handleSearchSubmit} />
-        <HomePage
-          bookList={bookList}
-          fetchPaginationData={fetchPaginationData}
-        />
+        <Header />
+        {loading ? (
+          <div className="text-white mb-auto overflow-y-scroll no-scrollbar">
+            Loading....
+          </div>
+        ) : (
+          <HomePage />
+        )}
+
         <Footer />
       </div>
     </>
