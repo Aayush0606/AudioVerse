@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
-import HomePage from "./pages/HomePage/HomePage";
 import { useSelector, useDispatch } from "react-redux";
 import { handleUpdate } from "./app/reducers/booksSlice";
+import { Outlet } from "react-router-dom";
 function App() {
   const dispatch = useDispatch();
   const booksState = useSelector((data) => data.booksState);
@@ -38,7 +38,7 @@ function App() {
             Loading....
           </div>
         ) : (
-          <HomePage />
+          <Outlet />
         )}
 
         <Footer />

@@ -27,7 +27,7 @@ const handleResetData = (state, action) => {
   state.booklist = [];
 };
 
-const fetchPaginationData = (state, action) => {
+const handlePaginationData = (state, action) => {
   console.log(action.payload.newBookList, "in slice");
   state.booklist = state.booklist.concat(action.payload.newBookList);
   state.offset += 1;
@@ -39,7 +39,7 @@ export const booksSlice = createSlice({
   reducers: {
     handleSearch: handleSearchSubmit,
     handleUpdate: handleUpdatedData,
-    handlePagination: fetchPaginationData,
+    handlePagination: handlePaginationData,
     handleReset: handleResetData,
   },
 });

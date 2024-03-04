@@ -1,17 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
 import { handleReset } from "../../app/reducers/booksSlice";
+import { useNavigate } from "react-router-dom";
 function Footer() {
   const dispatch = useDispatch();
   const booksState = useSelector((data) => data.booksState);
+  const navigate = useNavigate();
+  const handleClickHome = () => {
+    navigate("/");
+    // booksState.baseURL !== "api/feed/audiobooks/" &&
+    // dispatch(handleReset())
+  };
   return (
     <footer className="w-full p-2 ">
       <div className="grid h-full max-w-xs grid-cols-2 mx-auto font-medium bg-slate-700 border-slate-600 rounded-full">
         <button
           type="button"
-          onClick={() =>
-            booksState.baseURL !== "api/feed/audiobooks/" &&
-            dispatch(handleReset())
-          }
+          onClick={handleClickHome}
           className="inline-flex flex-col items-center justify-center px-5 border-gray-600 border-x hover:bg-gray-800 group rounded-l-full"
         >
           <svg
