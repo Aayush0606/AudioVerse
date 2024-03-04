@@ -5,17 +5,32 @@ import { useParams } from "react-router-dom";
 function BookPage() {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [chapters, setChapters] = useState([]);
 
   useEffect(() => {
-    (async () => {
+    (async function () {
       setLoading(true);
-      const data = await fetch(`/rss/${id}`)
+      await fetch(`/rss/${id}`)
         .then((data) => data.text())
-        .then((data) => data)
+        .then((data) => {
+          const xmlDoc = new DOMParser().parseFromString(data, "text/xml");
+          const bookTitle = xmlDoc.querySelector("channel > title").textContent;
+          const bookDescription = xmlDoc.querySelector(
+            "channel > description"
+          ).textContent;
+          const items = Array.from(xmlDoc.querySelectorAll("item"));
+          const chapterFetchedData = items.map((item) => ({
+            title: item.querySelector("title").textContent.trim(),
+            audioLink: item.querySelector("enclosure").getAttribute("url"),
+          }));
+          setTitle(bookTitle);
+          setDescription(bookDescription);
+          setChapters(chapterFetchedData);
+        })
         .catch((error) => console.log("Error", error))
         .finally(() => setLoading(false));
-      const xmlDoc = new DOMParser().parseFromString(data, "text/xml");
-      console.log(xmlDoc);
     })();
   }, []);
 
@@ -28,7 +43,7 @@ function BookPage() {
 
   return (
     <div className="text-white mb-auto overflow-y-scroll no-scrollbar">
-      <Book />
+      <Book title={title} description={description} chapters={chapters} />
     </div>
   );
 }

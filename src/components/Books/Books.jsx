@@ -5,7 +5,7 @@ function Books({ item }) {
       <Link to={`/${item.id}`}>
         <div
           key={item.id}
-          className="p-2 hover:cursor-pointer hover:text-violet-300 text-violet-50 "
+          className="p-2 hover:cursor-pointer hover:text-violet-300 text-violet-50 transition-all duration-200"
         >
           <div className="font-black text-xl md:text-3xl font-sans">
             {item.title}{" "}
