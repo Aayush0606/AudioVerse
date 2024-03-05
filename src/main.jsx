@@ -28,6 +28,13 @@ const router = createBrowserRouter(
           return { Component: BookPage.default };
         }}
       />
+      <Route
+        path="/liked"
+        lazy={async () => {
+          const LikePage = await import("./pages/LikePage/LikePage");
+          return { Component: LikePage.default };
+        }}
+      />
     </Route>
   )
 );

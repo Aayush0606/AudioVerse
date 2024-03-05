@@ -1,14 +1,11 @@
-import { useDispatch, useSelector } from "react-redux";
-import { handleReset } from "../../app/reducers/booksSlice";
 import { useNavigate } from "react-router-dom";
 function Footer() {
-  const dispatch = useDispatch();
-  const booksState = useSelector((data) => data.booksState);
   const navigate = useNavigate();
   const handleClickHome = () => {
     navigate("/");
-    // booksState.baseURL !== "api/feed/audiobooks/" &&
-    // dispatch(handleReset())
+  };
+  const handleClickLike = () => {
+    navigate("/liked");
   };
   return (
     <footer className="w-full p-2 ">
@@ -33,6 +30,7 @@ function Footer() {
         </button>
         <button
           type="button"
+          onClick={handleClickLike}
           className="inline-flex flex-col items-center justify-center px-5 border-e border-gray-600 hover:bg-gray-800 group rounded-r-full"
         >
           <svg

@@ -19,14 +19,6 @@ function Header() {
     e.preventDefault();
     const searchQuery = e.target.query.value;
     const searchBy = e.target.by.value;
-    if (!searchQuery || searchQuery.trim() === "") {
-      alert("Please enter valid input!!");
-      return;
-    }
-    if (!searchBy || searchBy.trim() === "") {
-      alert("Please select valid type!!");
-      return;
-    }
     e.target.query.value = "";
     dispatch(handleSearch({ searchQuery, searchBy }));
   };
