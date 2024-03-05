@@ -9,6 +9,12 @@ function Book() {
   const [chapters, setChapters] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
   const [bookImage, setBookImage] = useState("");
+
+  const getSeconds = (timeString) => {
+    const [hours, minutes, seconds] = timeString.split(":").map(Number);
+    return hours * 3600 + minutes * 60 + seconds;
+  };
+
   useEffect(() => {
     (async function () {
       setLoading(true);
@@ -27,9 +33,11 @@ function Book() {
           const chapterFetchedData = items.map((item) => ({
             title: item.querySelector("title").textContent.trim(),
             audioLink: item.querySelector("enclosure").getAttribute("url"),
-            duration: item
-              .querySelector("itunes\\:duration, duration")
-              .textContent.trim(),
+            duration: getSeconds(
+              item
+                .querySelector("itunes\\:duration, duration")
+                .textContent.trim()
+            ),
           }));
           setTitle(bookTitle);
           setDescription(bookDescription);
