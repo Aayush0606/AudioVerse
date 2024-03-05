@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import MusicPlayer from "../MusicPlayer/MusicPlayer";
 function Book() {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [chapters, setChapters] = useState([]);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audioUrl, setAudioUrl] = useState("");
   const [isLiked, setIsLiked] = useState(false);
-
+  const [bookImage, setBookImage] = useState("");
   useEffect(() => {
     (async function () {
       setLoading(true);
@@ -21,6 +20,9 @@ function Book() {
           const bookDescription = xmlDoc.querySelector(
             "channel > description"
           ).textContent;
+          const imageUrl = xmlDoc
+            .querySelector("channel > itunes\\:image, image")
+            .getAttribute("href");
           const items = Array.from(xmlDoc.querySelectorAll("item"));
           const chapterFetchedData = items.map((item) => ({
             title: item.querySelector("title").textContent.trim(),
@@ -32,6 +34,7 @@ function Book() {
           setTitle(bookTitle);
           setDescription(bookDescription);
           setChapters(chapterFetchedData);
+          setBookImage(imageUrl);
           const localStorageData =
             JSON.parse(localStorage.getItem("liked")) || [];
           localStorageData.forEach((item) => {
@@ -43,22 +46,6 @@ function Book() {
     })();
   }, []);
 
-  if (loading)
-    return (
-      <div className="text-white mb-auto overflow-y-scroll no-scrollbar">
-        Loading....
-      </div>
-    );
-
-  const handleClick = (url) => {
-    if (audioUrl === url) {
-      setAudioUrl("");
-      setIsPlaying(false);
-    } else {
-      setAudioUrl(url);
-      setIsPlaying(true);
-    }
-  };
   const toggleLike = () => {
     let localStorageData = JSON.parse(localStorage.getItem("liked")) || [];
     if (isLiked) {
@@ -69,6 +56,13 @@ function Book() {
     setIsLiked(!isLiked);
     localStorage.setItem("liked", JSON.stringify(localStorageData));
   };
+
+  if (loading)
+    return (
+      <div className="text-white mb-auto overflow-y-scroll no-scrollbar">
+        Loading....
+      </div>
+    );
   return (
     <>
       <div className="p-2">
@@ -94,55 +88,7 @@ function Book() {
           {description}
         </div>
         <div className="text-white text-xl text-medium mt-2">
-          {chapters &&
-            chapters.map((item, idx) => (
-              <div
-                key={idx}
-                onClick={() => handleClick(item.audioLink)}
-                className={`flex flex-col md:flex-row md:items-center hover:cursor-pointer hover:text-violet-300 ${
-                  item.audioLink === audioUrl
-                    ? "text-red-600"
-                    : "text-violet-50"
-                } transition-all duration-200 p-2`}
-              >
-                <div className="flex">
-                  {item.audioLink === audioUrl ? (
-                    <svg
-                      className="text-white"
-                      width="24"
-                      height="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      fill="currentColor"
-                    >
-                      <path d="M10 24h-6v-24h6v24zm10 0h-6v-24h6v24zm-11-23h-4v22h4v-22zm10 0h-4v22h4v-22z" />
-                    </svg>
-                  ) : (
-                    <svg
-                      className="text-white"
-                      width="24"
-                      height="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      fill="currentColor"
-                    >
-                      <path d="M23 12l-22 12v-24l22 12zm-21 10.315l18.912-10.315-18.912-10.315v20.63z" />
-                    </svg>
-                  )}
-
-                  <div className="md:text-xl ml-2">
-                    {item.title} ({item.duration})
-                  </div>
-                </div>
-                <div>
-                  {isPlaying && item.audioLink === audioUrl && (
-                    <audio src={audioUrl} autoPlay controls />
-                  )}
-                </div>
-              </div>
-            ))}
+          <MusicPlayer chapters={chapters} bookImage={bookImage} />
         </div>
       </div>
     </>
